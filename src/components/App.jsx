@@ -1,85 +1,81 @@
+import { nanoid } from 'nanoid';
 import { Component } from 'react';
-import css from './App.module.css';
-import PropTypes from "prop-types";
-import { FeedbackOption } from './FeedbackOptions';
-import { Stats } from './Stats';
-
-const Section = ( {title, children} ) => {
-  return (
-    <section>
-       <h2>{title}</h2>
-       {children}
-    </section>   
-  )
-}
-
-Section.propTypes = {
-  title: PropTypes.string.isRequired,
-  children: PropTypes.object
-}
-
-const Notification = ( {message} ) => <p>{message}</p>
+import { ContactForm } from './ContactForm';
+import { ContactList } from './ContactList';
+import { Filter } from './Filter';
+import css from './App.module.css'
 
 class App extends Component {
-  state = { good: 0, neutral: 0, bad: 0, total: 0, positive: 0 }
-
-  countTotalFeedback = () => {
-    this.setState(prevState => {
-      return {total: prevState.good + prevState.bad + prevState.neutral}
-     })
-  }
-
-  countPositiveFeedbackPercentage = () => {
-    this.setState(prevState => {
-      return {positive: (prevState.good / prevState.total) * 100 }
-    })
-  }
-
-  handlegood = evt => { 
+    state = {
+      contacts: [
+        {id: 'id-1', name: 'Rosie Simpson', number: '459-12-56'},
+        {id: 'id-2', name: 'Hermione Kline', number: '443-89-12'},
+        {id: 'id-3', name: 'Eden Clements', number: '645-17-79'},
+        {id: 'id-4', name: 'Annie Copeland', number: '227-91-26'},
+      ],
+      filteredContacts: [
+        {id: 'id-1', name: 'Rosie Simpson', number: '459-12-56'},
+        {id: 'id-2', name: 'Hermione Kline', number: '443-89-12'},
+        {id: 'id-3', name: 'Eden Clements', number: '645-17-79'},
+        {id: 'id-4', name: 'Annie Copeland', number: '227-91-26'},
+      ],
+    }
+    
+  handleSubmit = evt => {
     evt.preventDefault();
-    this.setState({good: this.state.good + 1})
-    this.countTotalFeedback()
-    this.countPositiveFeedbackPercentage()
+    const form = evt.currentTarget;
+    const name = form.elements.name.value;
+    const namee = name.toLowerCase();
+
+    for (let person of this.state.contacts) {
+      if (person.name.toLowerCase() === namee) {
+        alert(name + ' is already in contacts')
+        return
+      } else {
+        continue
+      }
+    }
+
+    const number = form.elements.number.value;
+    const id = nanoid();
+    const personObject = { name: name, number: number, id: id }
+    this.setState( {contacts: this.state.contacts.concat(personObject)})
+    this.setState( {filteredContacts: this.state.filteredContacts.concat(personObject)} )
+    //console.log(this.state.contacts)
+    form.reset();
   }
 
-  handleneutral = evt => { 
-    evt.preventDefault();
-    this.setState({neutral: this.state.neutral + 1})
-    this.countTotalFeedback()
-    this.countPositiveFeedbackPercentage()
+  handleFilter = (evt) => {
+    const word = evt.target.value.toLowerCase();
+    const filtered = this.state.contacts.filter(
+      (contact) =>
+        contact.name.toLowerCase().includes(word));
+    this.setState({ filteredContacts: filtered }); 
   }
 
-  handlebad = evt => { 
-    evt.preventDefault();
-    this.setState({bad: this.state.bad + 1})
-    this.countTotalFeedback()
-    this.countPositiveFeedbackPercentage()
+  handleDelete = (id) => {
+    const newContacts = [...this.state.contacts];
+    const index = newContacts.findIndex((contact) => contact.id === id);
+    newContacts.splice(index, 1)
+    this.setState({contacts: newContacts})
+    this.setState({filteredContacts: newContacts})
   }
-
 
   render() {
-    const { good } = this.state
-    const { neutral } = this.state
-    const { bad } = this.state
-    const {total} = this.state
-    const {positive} = this.state
+    const { contacts } = this.state
+    const { filteredContacts } = this.state;
 
     return (
       <div className={css.container}>
-        <Section title={'Please leave feedback'} >
-          <FeedbackOption option={['Good', 'Neutral', 'Bad']} 
-          onLeaveFeedback={[this.handlegood, this.handleneutral, this.handlebad]} />
-        </Section>
-        <Section title={'Statistics'}>
-          {total === 0 ? (
-            <Notification message={'No feedback given'} />
-          ) : (
-            <Stats good={good} neutral={neutral} bad={bad} total={total} positive={positive.toFixed(0) + '%'} />
-          )}
-        </Section>        
+        <h1>Phonebook</h1>
+        <ContactForm handleSubmit={this.handleSubmit}/>
+        <h2>Contacts</h2>
+        <Filter handleFilter={this.handleFilter}/>
+        <ContactList arr={ filteredContacts } handleDelete={this.handleDelete} />
       </div>
     );
   }
+
 };
 
-export { App } 
+export { App }
