@@ -1,11 +1,9 @@
-import css from './App.module.css';
-
 const ContactForm = ( {handleSubmit, handleChange} ) => {
     return (
-      <form className={css.form} onSubmit={handleSubmit}>
-        <p className={css.p}>Name</p>
+      <form className='.form' onSubmit={handleSubmit}>
+        <p className='.p'>Name</p>
         <input 
-        className={css.input} 
+        className='.input' 
         type='text' 
         name='name'
         onChange={handleChange}
@@ -13,9 +11,9 @@ const ContactForm = ( {handleSubmit, handleChange} ) => {
         title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
         required
         />
-        <p className={css.p}>Number</p>
+        <p className='.p'>Number</p>
         <input 
-        className={css.input} 
+        className='.input' 
         type='tel' 
         name='number'
         onChange={handleChange}
@@ -23,7 +21,7 @@ const ContactForm = ( {handleSubmit, handleChange} ) => {
         title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
         required
         />
-        <button className={css.btn} type='submit'>Add contact</button>
+        <button className='.btn' type='submit'>Add contact</button>
       </form>
     )
   }

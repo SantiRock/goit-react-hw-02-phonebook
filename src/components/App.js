@@ -1,10 +1,9 @@
 import { nanoid } from 'nanoid';
-import css from './App.module.css';
 import { Component } from 'react';
 import { ContactForm } from './ContactForm';
 import { ContactList } from './ContactList';
 import { Filter } from './Filter';
-
+import './App.css';
 
 class App extends Component {
     state = {
@@ -67,7 +66,7 @@ class App extends Component {
     const { filteredContacts } = this.state;
 
     return (
-      <div className={css.container}>
+      <div className='.container'>
         <h1>Phonebook</h1>
         <ContactForm handleSubmit={this.handleSubmit}/>
         <h2>Contacts</h2>
