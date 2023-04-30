@@ -1,14 +1,15 @@
 import css from './App.module.css';
 import PropTypes from "prop-types";
 
-const Filter = ( { handleFilter } ) => {
+const Filter = ( { setFilter, filter } ) => {
     return(
       <>
         <p className={css.p}>Find contacts by name</p>
         <input 
-        onChange={handleFilter}
+        onChange={setFilter}
         type='text'
         name='filter'
+        value={filter}
         />
       </>
     )
